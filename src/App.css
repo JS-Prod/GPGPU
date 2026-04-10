@@ -1,0 +1,410 @@
+body,
+html,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-family: "Sora", "Avenir Next", "Segoe UI", sans-serif;
+  background: radial-gradient(circle at 20% 10%, #101f42 0%, #05060b 55%);
+  overflow: hidden;
+  display: block;
+}
+
+.app-container {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  --panel-offset: 1.8rem;
+  --panel-width: min(32rem, 42vw);
+  --loading-panel-gap: 1.1rem;
+}
+
+.loading-overlay {
+  position: absolute;
+  top: var(--panel-offset);
+  bottom: var(--panel-offset);
+  left: calc(var(--panel-offset) + var(--panel-width) + var(--loading-panel-gap));
+  right: var(--panel-offset);
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem;
+  border-radius: 1rem;
+  background: radial-gradient(
+    circle at center,
+    rgba(2, 6, 15, 0.72) 0%,
+    rgba(2, 6, 15, 0.28) 52%,
+    rgba(2, 6, 15, 0) 82%
+  );
+  pointer-events: none;
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  border: 3px solid rgba(146, 185, 255, 0.25);
+  border-top-color: rgba(214, 235, 255, 1);
+  animation: spin 0.8s linear infinite;
+}
+
+.loading-text {
+  margin: 0;
+  color: #d6e8ff;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.left-panel {
+  position: absolute;
+  top: var(--panel-offset);
+  bottom: var(--panel-offset);
+  left: var(--panel-offset);
+  width: var(--panel-width);
+  max-height: none;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 0.3rem;
+  scrollbar-gutter: stable both-edges;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.left-panel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.left-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.left-panel::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(139, 178, 228, 0.36);
+}
+
+.left-panel::-webkit-scrollbar-thumb:hover {
+  background: rgba(168, 203, 246, 0.5);
+}
+
+.panel-shell {
+  position: relative;
+  padding: 1.95rem;
+  border-radius: 1.4rem;
+  color: #f6f9ff;
+  border: 1px solid rgba(168, 207, 255, 0.24);
+  background:
+    linear-gradient(145deg, rgba(18, 31, 62, 0.82), rgba(3, 7, 15, 0.78)),
+    radial-gradient(circle at 85% 10%, rgba(86, 164, 255, 0.28), transparent 40%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow:
+    0 24px 50px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.panel-shell-content {
+  min-height: 0;
+}
+
+.panel-kicker {
+  margin: 0 0 0.46rem;
+  font-size: 0.63rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(172, 207, 247, 0.9);
+}
+
+.site-title {
+  margin: 0 0 0.9rem;
+  font-size: clamp(2rem, 4.3vw, 3.05rem);
+  font-weight: 700;
+  line-height: 0.94;
+  letter-spacing: -0.018em;
+  text-wrap: balance;
+}
+
+.hero-copy {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.56;
+  color: rgba(241, 249, 255, 0.95);
+  max-width: 36ch;
+  text-wrap: pretty;
+}
+
+.hero-subcopy {
+  margin: 0.52rem 0 0;
+  font-size: 0.88rem;
+  line-height: 1.56;
+  color: rgba(201, 221, 246, 0.9);
+  max-width: 46ch;
+  text-wrap: pretty;
+}
+
+.stats-row {
+  margin: 1.02rem 0 1.04rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.stat-card {
+  padding: 0.75rem 0.65rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(173, 209, 255, 0.2);
+  background: rgba(6, 12, 25, 0.65);
+}
+
+.stat-value {
+  display: block;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #f2f8ff;
+}
+
+.stat-label {
+  display: block;
+  margin-top: 0.22rem;
+  font-size: 0.72rem;
+  color: rgba(188, 208, 233, 0.88);
+  letter-spacing: 0.02em;
+}
+
+.section-title {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #a4cbf3;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.section-title + p {
+  margin: 0.62rem 0 0.88rem;
+  font-size: 0.88rem;
+  line-height: 1.56;
+  color: rgba(213, 229, 248, 0.88);
+  max-width: 44ch;
+  text-wrap: pretty;
+}
+
+.nav-hud {
+  margin-top: 0.72rem;
+  padding-top: 0.74rem;
+  border-top: 1px solid rgba(144, 186, 237, 0.22);
+}
+
+.nav-hud-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.55rem;
+  margin-bottom: 0.52rem;
+}
+
+.nav-hud-title {
+  margin: 0;
+  font-size: 0.64rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #b6d7fb;
+}
+
+.nav-hud-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.38rem;
+}
+
+.nav-hud-item {
+  display: grid;
+  gap: 0.18rem;
+  box-sizing: border-box;
+  border-radius: 0.62rem;
+  border: 1px solid rgba(165, 201, 245, 0.22);
+  background: linear-gradient(
+    145deg,
+    rgba(17, 34, 64, 0.64),
+    rgba(9, 17, 35, 0.6)
+  );
+  padding: 0.46rem 0.54rem;
+}
+
+.nav-action {
+  font-size: 0.72rem;
+  line-height: 1.18;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  color: rgba(240, 248, 255, 0.98);
+}
+
+.nav-gesture {
+  font-size: 0.56rem;
+  line-height: 1.12;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: rgba(175, 202, 234, 0.9);
+}
+
+.reset-camera-btn {
+  min-height: 1.28rem;
+  padding: 0 0.56rem;
+  border-radius: 999px;
+  border: 1px solid rgba(175, 212, 255, 0.32);
+  background: rgba(16, 34, 63, 0.62);
+  color: rgba(199, 223, 249, 0.95);
+  font-family: inherit;
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.14s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.reset-camera-btn:hover {
+  background: rgba(27, 52, 93, 0.86);
+  border-color: rgba(197, 225, 255, 0.42);
+  transform: translateY(-1px);
+}
+
+.reset-camera-btn:focus-visible {
+  outline: none;
+}
+
+.fullscreen-canvas {
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+
+@media (max-width: 900px) {
+  .app-container {
+    --panel-offset: 1rem;
+    --panel-width: calc(100vw - 2rem);
+    display: flex;
+    flex-direction: column;
+    gap: 0.78rem;
+    height: 100dvh;
+    padding: 1rem;
+    box-sizing: border-box;
+  }
+
+  .loading-overlay {
+    inset: auto 1rem 1rem;
+    top: auto;
+    left: 1rem;
+    right: 1rem;
+    transform: none;
+    width: auto;
+    padding: 0.7rem 0.85rem;
+    border-radius: 0.9rem;
+    background: rgba(2, 6, 15, 0.72);
+  }
+
+  .left-panel {
+    position: relative;
+    top: auto;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    width: 100%;
+    height: 48dvh;
+    max-height: 48dvh;
+    flex: 0 0 auto;
+    gap: 0.52rem;
+    padding-right: 0;
+    overflow: hidden;
+  }
+
+  .panel-shell {
+    height: 100%;
+    padding: 1.4rem;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .panel-shell-content {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 0.32rem;
+    scrollbar-gutter: stable;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+
+  .panel-shell-content::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  .panel-shell-content::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .panel-shell-content::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: rgba(139, 178, 228, 0.36);
+  }
+
+  .panel-shell-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(168, 203, 246, 0.5);
+  }
+
+  .site-title {
+    font-size: clamp(1.8rem, 10vw, 2.4rem);
+  }
+
+  .hero-copy,
+  .hero-subcopy,
+  .section-title + p {
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+
+  .stats-row {
+    grid-template-columns: 1fr;
+    gap: 0.45rem;
+    margin: 1rem 0 1rem;
+  }
+
+  .nav-hud-list {
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
+  }
+
+  .nav-hud {
+    margin-top: 0.88rem;
+    padding-top: 0.8rem;
+  }
+
+  .fullscreen-canvas {
+    flex: 1 1 auto;
+    min-height: 0;
+    height: auto;
+  }
+}
