@@ -25,6 +25,12 @@ const PERF_ENABLED_QUERY_PARAM = "particlePerf";
 const PERF_ENABLED_STORAGE_KEY = "particlePerf";
 const PERF_DEFAULT_ENABLED = Boolean(import.meta.env?.DEV);
 const PERF_HISTORY_LIMIT = 240;
+const APP_BASE_URL = import.meta.env.BASE_URL || "/";
+
+function resolveAssetPath(assetPath) {
+  const normalized = String(assetPath || "").replace(/^\/+/, "");
+  return `${APP_BASE_URL}${normalized}`;
+}
 
 function createPerfMetricsWindow(startAt = 0) {
   return {
@@ -163,38 +169,38 @@ function buildPerfSnapshot({
 
 const models = [
   {
-    path: "/models/whale.obj",
+    path: "models/whale.obj",
     color: [0.3, 0.6, 0.9],
     scale: [4.5, 4.5, 4.5],
     rotation: [Math.PI, 1.1, -1.56],
   },
   {
-    path: "/models/dancer.obj",
+    path: "models/dancer.obj",
     color: [1, 0.8, 0.5],
     scale: [4.5, 4.5, 4.5],
     rotation: [Math.PI / 12, 0, 0],
     //rotation: [Math.PI / 0.1, -1.25, 0],
   },
   {
-    path: "/models/horse.obj",
+    path: "models/horse.obj",
     color: [0.5, 0.4, 0.8],
     scale: [4.5, 4.5, 4.5],
     rotation: [Math.PI / 1.9, Math.PI / 1.7, Math.PI],
   },
   {
-    path: "/models/elephant.obj",
+    path: "models/elephant.obj",
     color: [0.8, 0.2, 0.4],
     scale: [4.5, 4.5, 4.5],
     rotation: [Math.PI / 2.1, -0.9, 3.15],
   },
   {
-    path: "/models/air-balloon.obj",
+    path: "models/air-balloon.obj",
     color: [0.4, 0.6, 0.5],
     scale: [4.5, 4.5, 4.5],
     rotation: [Math.PI, 1.8, -1.56],
   },
   // {
-  //   path: "/models/dog.obj",
+  //   path: "models/dog.obj",
   //   color: [1, 0.6, 0.5],
   //   scale: [4.5, 4.5, 4.5],
   //   rotation: [Math.PI, 1.8, -1.56, 0],
@@ -591,10 +597,11 @@ export function GPGPUParticleMesh({ isMobile, onInitialReady }) {
         if (cancelled || isUnmountingRef.current) break;
 
         const geometries = [];
+        const modelPath = resolveAssetPath(model.path);
 
         try {
-          if (model.path.endsWith(".glb") || model.path.endsWith(".gltf")) {
-            const gltf = await gltfLoader.loadAsync(model.path);
+          if (modelPath.endsWith(".glb") || modelPath.endsWith(".gltf")) {
+            const gltf = await gltfLoader.loadAsync(modelPath);
             gltf.scene.updateMatrixWorld(true);
             gltf.scene.traverse((child) => {
               if (child.isMesh) {
@@ -603,8 +610,8 @@ export function GPGPUParticleMesh({ isMobile, onInitialReady }) {
                 geometries.push(geom);
               }
             });
-          } else if (model.path.endsWith(".obj")) {
-            const object = await objLoader.loadAsync(model.path);
+          } else if (modelPath.endsWith(".obj")) {
+            const object = await objLoader.loadAsync(modelPath);
             object.updateMatrixWorld(true);
             object.traverse((child) => {
               if (child.isMesh) {
@@ -615,7 +622,7 @@ export function GPGPUParticleMesh({ isMobile, onInitialReady }) {
             });
           }
         } catch (err) {
-          console.warn("Failed to load model:", model.path, err);
+          console.warn("Failed to load model:", modelPath, err);
           continue;
         }
 
@@ -625,7 +632,7 @@ export function GPGPUParticleMesh({ isMobile, onInitialReady }) {
         try {
           geometry = mergeGeometries(geometries, false);
         } catch (err) {
-          console.warn("mergeGeometries failed for", model.path, err);
+          console.warn("mergeGeometries failed for", modelPath, err);
           geometries.forEach((geom) => geom.dispose());
           continue;
         }
