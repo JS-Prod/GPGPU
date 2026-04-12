@@ -218,22 +218,6 @@ export default function App() {
       controls.touches.ONE = TOUCH_NONE;
       controls.touches.TWO = THREE.TOUCH.DOLLY_ROTATE;
 
-      if (touchCount === 1) {
-        controls.enabled = false;
-        controls.enableRotate = false;
-        controls.enableZoom = false;
-        controls.enablePan = false;
-        return;
-      }
-
-      if (touchCount === 2) {
-        controls.enabled = true;
-        controls.enableRotate = true;
-        controls.enableZoom = true;
-        controls.enablePan = false;
-        return;
-      }
-
       if (touchCount === 3) {
         controls.enabled = false;
         controls.enableRotate = false;
@@ -338,30 +322,27 @@ export default function App() {
 
   return (
     <div className="app-container">
-      {isInitialLoading && (
-        <div className="loading-overlay" role="status" aria-live="polite">
-          <div className="loading-spinner" aria-hidden="true" />
-          <p className="loading-text">Loading particles...</p>
-        </div>
-      )}
-
       <div className="left-panel">
         <div className="panel-shell">
           <div className="panel-shell-content">
             <p className="panel-kicker">GPGPU Particles</p>
             <h1 className="site-title">Dreamfield Particles</h1>
             <p className="hero-copy">
-              One million particles are sampled from mesh surfaces and simulated
-              on the GPU in real time.
+              {isMobile
+                ? "250,000 particles are sampled from mesh surfaces and simulated on the GPU in real time."
+                : "1,000,000 particles are sampled from mesh surfaces and simulated on the GPU in real time."}
             </p>
             <p className="hero-subcopy">
-              A forward wind carries the cloud toward camera while lateral
-              damping keeps each silhouette readable instead of blowing apart.
+              Desktop runs 1,000,000 particles while mobile runs 250,000. A
+              forward wind carries the cloud toward camera while lateral damping
+              keeps each silhouette readable instead of blowing apart.
             </p>
 
             <div className="stats-row">
               <div className="stat-card">
-                <span className="stat-value">1,000,000</span>
+                <span className="stat-value">
+                  {isMobile ? "250,000" : "1,000,000"}
+                </span>
                 <span className="stat-label">Live Particles</span>
               </div>
               <div className="stat-card">
@@ -418,49 +399,60 @@ export default function App() {
         </div>
       </div>
 
-      <Canvas
-        camera={{ position: [0, 0, -5.5], fov: 60 }}
-        className="fullscreen-canvas"
-        dpr={isMobile ? [1, 1.25] : [1, 1.5]}
-        gl={{
-          antialias: false,
-          powerPreference: "high-performance",
-          stencil: false,
-        }}
-      >
-        <ShiftCameraView isMobile={isMobile} />
-        <GPGPUParticleMesh
-          isMobile={isMobile}
-          onInitialReady={handleInitialReady}
-        />
-        <OrbitControls
-          ref={setControlsRef}
-          enableDamping
-          dampingFactor={CAMERA_DAMPING_FACTOR}
-          enablePan={!isMobile}
-          enableRotate
-          enableZoom
-          rotateSpeed={CAMERA_ROTATE_SPEED}
-          zoomSpeed={CAMERA_ZOOM_SPEED}
-          panSpeed={CAMERA_PAN_SPEED}
-          touches={
-            isMobile
-              ? {
-                  ONE: TOUCH_NONE,
-                  TWO: THREE.TOUCH.DOLLY_ROTATE,
-                }
-              : {
-                  ONE: THREE.TOUCH.ROTATE,
-                  TWO: THREE.TOUCH.DOLLY_PAN,
-                }
-          }
-          mouseButtons={{
-            LEFT: THREE.MOUSE.ROTATE,
-            MIDDLE: THREE.MOUSE.DOLLY,
-            RIGHT: THREE.MOUSE.PAN,
+      <div className="canvas-container">
+        <Canvas
+          camera={{ position: [0, 0, -5.5], fov: 60 }}
+          className="fullscreen-canvas"
+          dpr={isMobile ? [1, 1.25] : [1, 1.5]}
+          gl={{
+            antialias: false,
+            powerPreference: "high-performance",
+            stencil: false,
           }}
-        />
-      </Canvas>
+        >
+          <ShiftCameraView isMobile={isMobile} />
+          <GPGPUParticleMesh
+            isMobile={isMobile}
+            onInitialReady={handleInitialReady}
+          />
+          <OrbitControls
+            ref={setControlsRef}
+            enableDamping
+            dampingFactor={CAMERA_DAMPING_FACTOR}
+            enablePan={!isMobile}
+            enableRotate
+            enableZoom
+            rotateSpeed={CAMERA_ROTATE_SPEED}
+            zoomSpeed={CAMERA_ZOOM_SPEED}
+            panSpeed={CAMERA_PAN_SPEED}
+            touches={
+              isMobile
+                ? {
+                    ONE: TOUCH_NONE,
+                    TWO: THREE.TOUCH.DOLLY_ROTATE,
+                  }
+                : {
+                    ONE: THREE.TOUCH.ROTATE,
+                    TWO: THREE.TOUCH.DOLLY_PAN,
+                  }
+            }
+            mouseButtons={{
+              LEFT: THREE.MOUSE.ROTATE,
+              MIDDLE: THREE.MOUSE.DOLLY,
+              RIGHT: THREE.MOUSE.PAN,
+            }}
+          />
+        </Canvas>
+
+        {isInitialLoading && (
+          <div className="loading-overlay" role="status" aria-live="polite">
+            <div className="loading-overlay-content">
+              <div className="loading-spinner" aria-hidden="true" />
+              <p className="loading-text">Loading particles...</p>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
